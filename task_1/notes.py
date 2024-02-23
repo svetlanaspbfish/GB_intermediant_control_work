@@ -31,10 +31,19 @@ def add_note(notes, identifier, title, body):
     print('Заметка добавлена.')
 
 # Функция для чтения заметок
-def read_notes(notes):
-    for note in notes:
-        print(f"ID: {note['id']}, Заголовок: {note['title']}, Дата/время: {note['timestamp']}")
-        print(f"Тело заметки: {note['body']}\n")
+def read_notes(notes, filter_date=None):
+    if filter_date:
+        filtered_notes = [note for note in notes if note['timestamp'].split()[0] == filter_date]
+        if filtered_notes:
+            for note in filtered_notes:
+                print(f"ID: {note['id']}, Заголовок: {note['title']}, Дата/время: {note['timestamp']}")
+                print(f"Тело заметки: {note['body']}\n")
+        else:
+            print('Нет заметок за указанную дату.')
+    else:
+        for note in notes:
+            print(f"ID: {note['id']}, Заголовок: {note['title']}, Дата/время: {note['timestamp']}")
+            print(f"Тело заметки: {note['body']}\n")
 
 # Функция для редактирования заметки
 def edit_note(notes, identifier, new_title, new_body):
@@ -69,7 +78,8 @@ def main():
             body = input('Введите тело заметки: ')
             add_note(notes, identifier, title, body)
         elif command == 'read':
-            read_notes(notes)
+            filter_date = input('Введите дату для фильтрации (yyyy-mm-dd) или нажмите Enter для вывода всех заметок: ')
+            read_notes(notes, filter_date)
         elif command == 'edit':
             identifier = input('Введите идентификатор заметки для редактирования: ')
             new_title = input('Введите новый заголовок заметки: ')
